@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'events',
     'corsheaders',
+    'groups',
 ]
 
 MIDDLEWARE = [
