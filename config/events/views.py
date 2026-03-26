@@ -20,7 +20,26 @@ class EventViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        """일반 일정 생성 시 시간이 겹치는지 검사"""
+        user = self.request.user
+        # 1. 새로 만들려는 일정의 시작/종료 시간 가져오기
+        start_time = serializer.validated_data.get('start_time')
+        end_time = serializer.validated_data.get('end_time')
+
+        # 2. DB에 겹치는 시간이 있는지 검사 (이동 시간 로직과 동일)
+        conflict_exists = Event.objects.filter(
+            user=user,
+            start_time__lt=end_time,      # 새 일정 종료보다 기존 시작이 빠르고
+            end_time__gt=start_time       # 새 일정 시작보다 기존 종료가 늦은 경우
+        ).exists()
+
+        if conflict_exists:
+            # 3. 겹치면 에러를 던져서 저장을 막음
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError("해당 시간에 이미 다른 일정이 있어 저장할 수 없습니다.")
+
+        # 4. 겹치지 않을 때만 안전하게 저장
+        serializer.save(user=user)
 
     # ---------- [여기서부터 이동 시간 계산 핵심 로직] ----------
 
@@ -28,13 +47,13 @@ class EventViewSet(viewsets.ModelViewSet):
     def add_travel_time(self, request):
         """
         [POST] /api/events/add_travel_time/
-        출발지, 도착지, 다음 일정 ID를 받아 이동 시간을 계산하고 저장합니다.
+        이동 시간을 계산하고, 시간이 비어있을 때만 일정을 등록합니다.
         """
         user = request.user
         data = request.data
 
-        start_place = data.get('start_place')      # 예: "덕성여자대학교"
-        end_place = data.get('end_place')          # 예: "강남역"
+        start_place = data.get('start_place')
+        end_place = data.get('end_place')
         next_event_id = data.get('next_event_id')
 
         if not all([start_place, end_place, next_event_id]):
@@ -57,24 +76,37 @@ class EventViewSet(viewsets.ModelViewSet):
         duration_seconds = self._get_driving_duration(start_x, start_y, end_x, end_y)
         
         if duration_seconds is None:
-            return Response({"error": "경로 계산에 실패했습니다. 카카오 설정을 확인하세요."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": "경로 계산에 실패했습니다."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # 4. 시간 계산 (도착 시간 - 소요 시간)
         arrival_time = next_event.start_time
         travel_start_time = arrival_time - timedelta(seconds=duration_seconds)
 
-        # 5. 카카오맵 길찾기 URL 생성
-        # 패턴: /link/from/이름,위도,경도/to/이름,위도,경도
+        # 🔥 [추가 로직] 5. 시간 충돌 체크 (앞 시간이 비어있는지 확인)
+        # 내가 이동해야 할 시간대에 다른 일정이 겹치는지 DB에서 조회
+        conflict_exists = Event.objects.filter(
+            user=user,
+            start_time__lt=arrival_time,      # 기존 일정의 시작이 이동 종료보다 빠르고
+            end_time__gt=travel_start_time    # 기존 일정의 종료가 이동 시작보다 늦은 경우
+        ).exists()
+
+        if conflict_exists:
+            return Response({
+                "error": "이동 시간 계산 불가",
+                "message": "해당 시간대에 이미 다른 일정이 있어 이동 시간을 등록할 수 없습니다. 앞 일정을 조정해주세요."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 6. 카카오맵 길찾기 URL 생성
         map_url = f"https://map.kakao.com/link/from/{start_place},{start_y},{start_x}/to/{end_place},{end_y},{end_x}"
 
-        # 6. 이동 일정 DB 저장
+        # 7. 이동 일정 DB 저장
         travel_event = Event.objects.create(
             user=user,
             title=f"🚗 이동 ({start_place} ➡️ {end_place})",
             start_time=travel_start_time,
             end_time=arrival_time,
             location=f"{start_place} -> {end_place}",
-            color="#D3D3D3",  # 이동 시간은 회색
+            color="#D3D3D3",
             is_travel_time=1,
             map_url=map_url
         )
@@ -85,23 +117,20 @@ class EventViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_201_CREATED)
 
 
-    # [보조 함수 1] 키워드로 좌표 찾기
     def _get_coords(self, address):
         url = "https://dapi.kakao.com/v2/local/search/keyword.json"
         headers = {"Authorization": f"KakaoAK {KAKAO_REST_API_KEY}"}
         params = {"query": address}
-        
         try:
             response = requests.get(url, headers=headers, params=params)
             if response.status_code == 200:
                 documents = response.json().get('documents')
                 if documents:
                     return documents[0]['x'], documents[0]['y']
-        except Exception as e:
-            print(f"좌표 변환 에러: {e}")
+        except Exception:
+            pass
         return None, None
 
-    # [보조 함수 2] 자동차 소요 시간 계산
     def _get_driving_duration(self, start_x, start_y, end_x, end_y):
         url = "https://apis-navi.kakaomobility.com/v1/directions"
         headers = {
@@ -113,7 +142,6 @@ class EventViewSet(viewsets.ModelViewSet):
             "destination": f"{end_x},{end_y}",
             "priority": "TIME"
         }
-        
         try:
             response = requests.get(url, headers=headers, params=params)
             data = response.json()
@@ -121,6 +149,6 @@ class EventViewSet(viewsets.ModelViewSet):
                 route = data['routes'][0]
                 if route.get('result_code') == 0:
                     return route['sections'][0]['duration']
-        except Exception as e:
-            print(f"경로 계산 에러: {e}")
+        except Exception:
+            pass
         return None
