@@ -4,7 +4,9 @@ from rest_framework.routers import DefaultRouter
 from .views import GroupViewSet
 
 router = DefaultRouter()
-router.register(r'', GroupViewSet) # r'' 또는 r'groups' 확인
+
+
+router.register(r'', GroupViewSet, basename='group') 
 
 urlpatterns = [
     path('', include(router.urls)),

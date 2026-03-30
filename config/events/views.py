@@ -40,38 +40,56 @@ class EventViewSet(viewsets.ModelViewSet):
 
         # 4. 겹치지 않을 때만 안전하게 저장
         serializer.save(user=user)
+        
+    def perform_update(self, serializer):
+        """일정 수정 시 시간이 겹치는지 검사"""
+        user = self.request.user
+        # 수정하려는 일정의 ID와 새로운 시간 정보
+        instance = self.get_object()
+        start_time = serializer.validated_data.get('start_time', instance.start_time)
+        end_time = serializer.validated_data.get('end_time', instance.end_time)
 
+        # DB에 겹치는 시간이 있는지 검사 (단, 현재 수정 중인 내 일정(ID)은 제외!)
+        conflict_exists = Event.objects.filter(
+            user=user,
+            start_time__lt=end_time,
+            end_time__gt=start_time
+        ).exclude(id=instance.id).exists() # ⭐ 이 부분이 핵심! 나 자신은 빼고 검사
+
+        if conflict_exists:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError("수정하려는 시간에 이미 다른 일정이 있습니다.")
+
+        serializer.save()
     # ---------- [여기서부터 이동 시간 계산 핵심 로직] ----------
 
     @action(detail=False, methods=['post'])
     def add_travel_time(self, request):
-        """
-        [POST] /api/events/add_travel_time/
-        이동 시간을 계산하고, 시간이 비어있을 때만 일정을 등록합니다.
-        """
         user = request.user
         data = request.data
 
+        # [수정 1] 이제 end_place는 입력받지 않습니다.
         start_place = data.get('start_place')
-        end_place = data.get('end_place')
         next_event_id = data.get('next_event_id')
 
-        if not all([start_place, end_place, next_event_id]):
-            return Response({"error": "출발지, 도착지, 다음 일정 ID가 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
+        # [수정 2] 필수 값 체크에서 end_place 제외
+        if not all([start_place, next_event_id]):
+            return Response({"error": "출발지와 다음 일정 ID가 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         # 1. 기준이 되는 다음 일정 가져오기
         try:
             next_event = Event.objects.get(id=next_event_id, user=user)
+            # [수정 3] DB에 저장된 장소를 end_place 변수에 담기
+            end_place = next_event.location 
         except Event.DoesNotExist:
             return Response({"error": "해당 일정을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
 
-        # 2. 출발지 및 도착지 좌표(x, y) 추출
+        # 2. 좌표(x, y) 추출 (이 로직은 유지하되, 위에서 가져온 end_place를 씁니다!)
         start_x, start_y = self._get_coords(start_place)
-        end_x, end_y = self._get_coords(end_place)
+        end_x, end_y = self._get_coords(end_place) # ⬅️ DB에서 가져온 장소로 좌표 변환!
 
         if not start_x or not end_x:
             return Response({"error": "주소를 찾을 수 없습니다. 정확한 장소명을 입력해주세요."}, status=status.HTTP_400_BAD_REQUEST)
-
         # 3. 카카오 모빌리티 API로 소요 시간(초) 계산
         duration_seconds = self._get_driving_duration(start_x, start_y, end_x, end_y)
         
@@ -152,3 +170,49 @@ class EventViewSet(viewsets.ModelViewSet):
         except Exception:
             pass
         return None
+    # ---------- [3-1번 페이지용: 미리보기 로직 추가] ----------
+
+    @action(detail=False, methods=['post'])
+    def preview_travel_time(self, request):
+        user = request.user
+        data = request.data
+
+        start_place = data.get('start_place')
+        next_event_id = data.get('next_event_id')
+
+    # 1. 필수 값 체크 (end_place는 뺍니다!)
+        if not all([start_place, next_event_id]):
+            return Response({"error": "출발지와 다음 일정 ID가 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 2. 기준 일정 확인 및 도착지(location) 가져오기
+        try:
+            next_event = Event.objects.get(id=next_event_id, user=user)
+            end_place = next_event.location  # ⭐ 여기서 DB에 저장된 장소를 자동으로 가져옵니다!
+        except Event.DoesNotExist:
+            return Response({"error": "일정을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    # 3. 좌표 및 시간 계산 (기존 로직 동일)
+        start_x, start_y = self._get_coords(start_place)
+        end_x, end_y = self._get_coords(end_place) # 위에서 가져온 end_place 사용!
+        
+        if not start_x or not end_x:
+            return Response({"error": "장소를 찾을 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        duration_seconds = self._get_driving_duration(start_x, start_y, end_x, end_y)
+        
+        if duration_seconds is None:
+            return Response({"error": "경로 계산 실패"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # 4. 결과 조립 (저장 X, 정보만 리턴)
+        duration_minutes = duration_seconds // 60
+        arrival_time = next_event.start_time
+        travel_start_time = arrival_time - timedelta(seconds=duration_seconds)
+
+        return Response({
+            "start_place": start_place,
+            "end_place": end_place,
+            "duration_minutes": duration_minutes,
+            "expected_start": travel_start_time.isoformat(),
+            "expected_end": arrival_time.isoformat(),
+            "message": f"예상 소요 시간은 약 {duration_minutes}분입니다. 추가하시겠습니까?"
+        }, status=status.HTTP_200_OK)
