@@ -214,5 +214,5 @@ class EventViewSet(viewsets.ModelViewSet):
             "duration_minutes": duration_minutes,
             "expected_start": travel_start_time.isoformat(),
             "expected_end": arrival_time.isoformat(),
-            "message": f"예상 소요 시간은 약 {duration_minutes}분입니다. 추가하시겠습니까?"
+            "message": f"{duration_minutes}"
         }, status=status.HTTP_200_OK)
