@@ -1,0 +1,32 @@
+.hidden {
+   display: none !important;
+}
+
+@font-face {
+   font-family: 'petit';
+   src: url("/petit-formal-script/PetitFormalScript-Regular.ttf") format('truetype');
+   unicode-range: U+0000-007F;
+}
+
+@font-face {
+   font-family: 'Maruburi';
+   src: url("/MaruBuriTTF/MaruBuri-Regular.ttf") format('truetype');
+   unicode-range: U+AC00-D7A3, U+3131-318E;
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   background-color: #FFF6FB;
+   font-family: 'petit', 'Maruburi', serif;
+}
+.page {
+   width: 1440px;
+   height: 1024px;
+   margin: 0 auto;
+}
+input,
+button,
+textarea {
+   font-family: 'petit', 'Maruburi', serif;
+}

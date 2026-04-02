@@ -1,0 +1,410 @@
+.page-group {
+   background-image: url("/images/background.png");
+   background-size: 50%;
+   background-repeat: repeat;
+   background-position: center;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.personal-left {
+   width: 1011px;
+   height: 1024px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.timetable-area {
+   width: 904px;
+   height: 1000px;
+   display: grid;
+   grid-template-columns: 134px 770px;
+   grid-template-rows: 112px 888px;
+   box-sizing: border-box;
+   background-color: #DFABAB;
+}
+
+/* 좌상단 코너 */
+.corner-box {
+   grid-column: 1 / 2;
+   grid-row: 1 / 2;
+   width: 134px;
+   height: 112px;
+   box-sizing: border-box;
+
+   background-color: rgba(72, 128, 79, 0.5);
+   background-image: radial-gradient(rgba(253, 244, 247, 0.35) 1px, transparent 1px);
+   background-size: 10px 10px;
+
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+
+   color: #FDF4F7;
+   font-size: 22px;
+   line-height: 1.1;
+}
+
+/* 코너 오른쪽 요일칸 */
+.day-header {
+   grid-column: 2 / 3;
+   grid-row: 1 / 2;
+   width: 770px;
+   height: 112px;
+   display: grid;
+   grid-template-columns: repeat(7, 110px);
+   background-color: #D59F9F;
+   box-sizing: border-box;
+}
+
+.day-cell {
+   width: 110px;
+   height: 112px;
+   box-sizing: border-box;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.day-img {
+   width: 110px;
+   height: 112px;
+   object-fit: contain;
+   display: block;
+}
+
+/* 코너 아래 시간 영역 */
+.time-column {
+   grid-column: 1 / 2;
+   grid-row: 2 / 3;
+   width: 134px;
+   height: 888px;
+   display: grid;
+   grid-template-rows: repeat(24, 37px);
+   box-sizing: border-box;
+}
+
+.time-cell {
+   width: 134px;
+   height: 37px;
+   box-sizing: border-box;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   background-color: rgba(197, 221, 170, 0.27); /* C5DDAA 27% */
+   color: #FEF3F9;
+   font-size: 29.5px;
+   border-bottom: 1px solid #FFFFFF;
+}
+
+/* 일정 들어가는 그리드 */
+.grid-area {
+   grid-column: 2 / 3;
+   grid-row: 2 / 3;
+   width: 770px;
+   height: 888px;
+   box-sizing: border-box;
+
+   display: grid;
+   grid-template-columns: repeat(7, 110px);
+   grid-template-rows: repeat(24, 37px);
+
+   background-color: rgba(248, 233, 233, 0.56);
+
+   position: relative;
+}
+
+.grid-cell {
+   width: 110px;
+   height: 37px;
+   box-sizing: border-box;
+
+   font-size: 22px;
+   color: #000000;
+
+   border-right: 1px solid rgba(255, 255, 255, 0.3);
+   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.grid-cell:nth-child(7n) {
+   border-right: none;
+}
+
+/* 오른쪽 입력 영역 */
+.personal-right {
+   width: 427px;
+   height: 1024px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   padding-top: 20px;
+   gap: 30px;
+   box-sizing: border-box;
+}
+
+/* personal / team 버튼 영역 */
+.personal-move-area {
+   width: 427px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 25px;
+   margin-bottom: 10px;
+}
+
+.move-personal-btn,
+.move-groupmain-btn {
+   width: 182px;
+   height: 161px;
+}
+
+/* 팀장 페이지 */
+#leader-area {
+   width: 457px;
+   height: 820px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   padding-top: 80px;
+   gap: 90px;
+   box-sizing: border-box;
+}
+.leader-input-area {
+   width: 457px;
+   height: 400px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 42px;
+   box-sizing: border-box;
+}
+.input-box {
+   width: 457px;
+   height: 180px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   gap: 20px;
+   box-sizing: border-box;
+}
+.label {
+   font-size: 32px;
+   color: #FFC1C1;
+   -webkit-text-stroke: 0.5px #D59999;
+   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+.time-input-wrapper {
+  position: relative;
+  width: 298px;
+}
+#place-input,
+#meeting-time {
+   width: 298px;
+   height: 81px;
+
+   background-color: rgba(255, 254, 254, 0.8);
+   border: 1px solid rgba(243, 122, 81, 0.69);
+   border-radius: 30px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+   outline: none;
+   font-size: 24px;
+   color: #555;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   box-sizing: border-box;
+   text-align: center;
+}
+#meeting-time::-webkit-outer-spin-button,
+#meeting-time::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.time-unit {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #D59999;
+  font-size: 20px;
+  pointer-events: none;
+}
+#start-btn,
+#save-btn {
+   width: 230px;
+   height: 90px;
+   font-size: 32px;
+   color: #FFC1C1;
+   -webkit-text-stroke: 0.5px #D59999;
+   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   border: none;
+   cursor: pointer;
+   border-radius: 30px;
+   background-color: rgba(255,255,255,0.6);
+   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+#start-btn:hover,
+#save-btn:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+#start-btn:active,
+#save-btn:hover {
+   transform: translateY(2px);
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 팀원 페이지 */
+#member-area {
+   width: 457px;
+   height: 820px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   box-sizing: border-box;
+   gap: 35px;
+}
+.member-input-area {
+   width: 457px;
+   height: 657px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   box-sizing: border-box;
+   gap: 20px;
+}
+.time-list-box {
+   width: 409px;
+   height: 415px;
+   padding: 18px;
+
+   background-color: rgba(255, 254, 254, 0.8);
+   border: 1px solid rgba(243, 122, 81, 0.69);
+   border-radius: 30px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+   box-sizing: border-box;
+
+   overflow: hidden;
+}
+.time-list-box {
+   width: 409px;
+   height: 415px;
+   padding: 18px;
+   background-color: rgba(255, 254, 254, 0.8);
+   border: 1px solid rgba(243, 122, 81, 0.69);
+   border-radius: 30px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+   box-sizing: border-box;
+
+   display: flex;
+   flex-direction: column;
+   overflow: hidden;
+
+   overflow-y: auto;
+   overflow-x: hidden;
+}
+.vote-box {
+   width: 298px;
+   height: 72px;
+
+   background-color: rgba(255, 254, 254, 0.8);
+   border: 1px solid rgba(243, 122, 81, 0.69);
+   border-radius: 30px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+   outline: none;
+   font-size: 24px;
+   color: #555;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   box-sizing: border-box;
+   text-align: center;
+}
+
+/* 팀 레이어 */
+.candidate-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+.candidate-item {
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid rgba(243, 122, 81, 0.35);
+  border-radius: 20px;
+  background-color: rgba(255,255,255,0.6);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.candidate-item.selected {
+  background-color: rgba(255, 193, 193, 0.35);
+  border: 1px solid rgba(243, 122, 81, 0.8);
+}
+
+.candidate-date {
+  font-size: 18px;
+  color: #b87b7b;
+}
+
+.candidate-time {
+  font-size: 22px;
+  color: #7c5c5c;
+}
+
+.empty-message {
+  font-size: 18px;
+  color: #999;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.highlight-candidate {
+  outline: 2px solid rgba(243, 122, 81, 0.9);
+  outline-offset: -2px;
+}
+
+.voted-num {
+  color: #f08a8a;
+  font-weight: bold;
+}
+
+.slash {
+  color: #999;
+}
+
+.total-num {
+  color: #8c6a6a;
+  font-weight: bold;
+}
+.highlight-candidate {
+  outline: 2px solid rgba(243, 122, 81, 0.9);
+  outline-offset: -2px;
+}

@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, time
 from .models import Group, GroupMember, AppointmentProposal, CandidateSlot
 from .serializers import GroupSerializer
 from events.models import Event
+from django.contrib.auth.models import User
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -45,7 +46,7 @@ class GroupViewSet(viewsets.ModelViewSet):
             if GroupMember.objects.filter(user=request.user, group=group).exists():
                 return Response({"message": "이미 이 그룹의 멤버입니다."}, status=status.HTTP_400_BAD_REQUEST)
             
-            # 실제 DB에 멤버 데이터 생성 (이게 빠져있어서 조회가 안 됐던 거예요!)
+            # 실제 DB에 멤버 데이터 생성
             GroupMember.objects.create(user=request.user, group=group)
             
             return Response({
@@ -119,45 +120,61 @@ class GroupViewSet(viewsets.ModelViewSet):
         })
 
     # --- [기능 4 수정] 여러 후보지에 한꺼번에 투표하기 ---
-    @action(detail=False, methods=['post'])
-    def vote_slots(self, request):
-        slot_ids = request.data.get('slot_ids', []) # 리스트로 받기 [105, 106, 107]
+    @action(detail=True, methods=['post'])
+    def vote_slots(self, request, pk=None):
+        group = self.get_object()
+        slot_ids = request.data.get('slot_ids', [])
         user = request.user
-        results = []
 
-        if not slot_ids:
-            return Response({"message": "선택된 슬롯이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        if not slot_ids or not isinstance(slot_ids, list):
+            return Response({"message": "올바른 슬롯 ID 리스트를 보내주세요."}, status=400)
 
         try:
+            # 1. 첫 번째 슬롯 정보 가져오기
+            first_slot = CandidateSlot.objects.filter(id=slot_ids[0]).first()
+            if not first_slot:
+                return Response({"message": "슬롯을 찾을 수 없습니다."}, status=404)
+            
+            proposal = first_slot.proposal
+
             with transaction.atomic():
-                for slot_id in slot_ids:
-                    slot = CandidateSlot.objects.get(id=slot_id)
-                    group = slot.proposal.group
-                    
-                    # 투표 추가 (이미 했으면 유지, 없으면 추가)
-                    if user not in slot.voters.all():
-                        slot.voters.add(user)
-                    
-                    # 전원 투표 여부 확인
-                    total_members = GroupMember.objects.filter(group=group).count()
-                    current_voters = slot.voters.count()
-                    
-                    # [자동 확정] 이 슬롯이 전원 일치라면?
-                    if current_voters == total_members:
-                        self._finalize_event(slot)
-                        results.append({"slot_id": slot_id, "status": "confirmed"})
-                    else:
-                        results.append({"slot_id": slot_id, "status": "voted"})
+                # 2. 투표 처리
+                for s_id in slot_ids:
+                    slot = CandidateSlot.objects.get(id=s_id)
+                    if slot.proposal.group != group:
+                        return Response({"message": "권한이 없는 슬롯입니다."}, status=403)
+                    slot.voters.add(user)
 
-            return Response({
-                "message": f"{len(slot_ids)}개 슬롯에 투표 완료!",
-                "details": results
-            }, status=status.HTTP_200_OK)
+                # 3. 전원 일치 여부 판별
+                total_members = GroupMember.objects.filter(group=group).count()
+                
+                # annotate를 사용하여 투표자 수를 계산한 뒤 필터링합니다.
+                from django.db.models import Count
+                confirmed_slot = CandidateSlot.objects.filter(proposal=proposal).annotate(
+                    num_voters=Count('voters')
+                ).filter(num_voters=total_members).first()
 
-        except CandidateSlot.DoesNotExist:
-            return Response({"message": "존재하지 않는 슬롯 ID가 포함되어 있습니다."}, status=status.HTTP_404_NOT_FOUND)
-    # --- [내부 헬퍼 함수] ---
+                if confirmed_slot:
+                    self._finalize_event(confirmed_slot)
+                    proposal.delete() # 확정 후 청소
+                    return Response({"status": "confirmed", "message": "일정 확정 완료!"})
 
+                # 4. 실패 판별 (모두 투표했으나 겹치는 게 없음)
+                voted_users_count = User.objects.filter(voted_candidates__proposal=proposal).distinct().count()
+
+                if voted_users_count == total_members:
+                    proposal.delete() # 실패 시 청소
+                    return Response({"status": "failed", "message": "공통 가능한 시간이 없습니다."})
+
+                return Response({
+                    "status": "voted",
+                    "current_voter_count": voted_users_count,
+                    "total_member_count": total_members
+                })
+
+        except Exception as e:
+            return Response({"message": str(e)}, status=500)
+    
     def _get_availability_data(self, group):
         """그룹 멤버들의 주간 일정 데이터를 합산하여 48개 슬롯으로 반환"""
         members = GroupMember.objects.filter(group=group).values_list('user_id', flat=True)
@@ -214,7 +231,7 @@ class GroupViewSet(viewsets.ModelViewSet):
                     start_time=slot.start_time,
                     end_time=slot.end_time,
                     location=proposal.location,
-                    color="#FFD700"
+                    color="#E89AAE"
                 )
             proposal.is_active = False
             proposal.save()

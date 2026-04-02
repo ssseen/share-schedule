@@ -1,0 +1,131 @@
+.page-traveltime {
+   background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)), url("/images/login-background.jpg");
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center;
+   width: 1440px;
+   height: 1024px;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+}
+.start-area {
+   width: 1440px;
+   height: 270px;
+   gap: 54px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.start-text {
+   width: 300px;
+   height: 103px;
+   background-color: rgba(236, 240, 120, 0.72);
+   font-size: 40px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.start-input {
+   width: 656px;
+   height: 103px;
+   background-color: rgba(236, 240, 120, 0.72);
+   font-size: 40px;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   box-sizing: border-box;
+   text-align: center;
+
+   border: none;
+   outline: none;
+}
+.search-btn {
+   width: 110px;
+   height: 110px;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   border: 2px solid transparent;
+}
+.search-btn:hover {
+   transform: scale(1.06);
+}
+
+.time-area {
+   width: 1440px;
+   height: 477px;
+
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+}
+.time-report-box {
+   width: 1101px;
+   height: 315px;
+
+   background-color: rgba(255, 255, 255, 0.4);
+   font-size: 96px;
+   color: #000000;
+
+   display: flex;
+   justify-content: center;
+   flex-direction: column;  
+   align-items: center;
+   box-sizing: border-box;
+   text-align: center;
+   line-height: 1.1;
+}
+.time-number {
+   display: flex;
+   align-items: baseline;
+   justify-content: center;
+   gap: 20px;
+}
+#travel-time {
+   color: #D278A0;
+}
+.add-area {
+   width: 1440px;
+   height: 270px;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   gap: 40px;
+}
+#add-traveltime-btn {
+   width: 400px;
+   height: 70px;
+   font-size: 30px;
+   color: #000000;
+   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   border: none;
+   cursor: pointer;
+   background-color: rgba(255, 185, 185, 0.4);
+   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+#add-traveltime-btn:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+#add-traveltime-btn:active {
+   transform: translateY(2px);
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.back-btn {
+   font-size: 35px;
+   color: #000000;
+}

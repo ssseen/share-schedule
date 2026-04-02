@@ -1,0 +1,43 @@
+.main-top {
+   width: 1440px;
+   height: 799px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.main-image-area {
+   width: 981px;
+   height: max-content;
+   justify-content: center;
+   display: flex;
+   align-items: center;
+}
+.main-background {
+   width: 924px;
+   height: auto;
+}
+.main-intro-area {
+   width: 438px;
+   height: max-content;
+   align-content: flex-end;
+   justify-content: center;
+   align-items: center;
+   gap: 34px;
+}
+.main-login-btn {
+   width: 402px;
+   height: 294px;
+   padding-bottom: 20px;
+}
+.main-introduce {
+   width: 438px;
+   height: auto;
+}
+.main-bottom {
+   width: 1440px;
+   height: 225px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 0 auto;     
+}

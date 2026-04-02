@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang = "ko">
+
+<head>
+   <meta charset = "utf-8">
+   <title>girl's secret</title>
+   <link rel = "stylesheet" href = "css/common.css">
+   <link rel = "stylesheet" href = "css/personal.css">
+</head>
+
+<body class = "page page-personal">
+
+   <div class = "personal-left">
+      <img src = "images/left-arrow.png" class = "left-arrow" onclick="prevWeek()">
+
+      <div class="timetable-area">
+         <div class="corner-box">
+            <div class="month-text">
+               <span id="month-num"></span>
+            </div>
+            <div class="week-text">
+               <span id="week-num"></span>
+            </div>
+         </div>
+
+         <div class="day-header">
+            <img src="images/mon.png" alt="Monday" class="day-img">
+            <img src="images/tue.png" alt="Tuesday" class="day-img">
+            <img src="images/wed.png" alt="Wednesday" class="day-img">
+            <img src="images/thu.png" alt="Thursday" class="day-img">
+            <img src="images/fri.png" alt="Friday" class="day-img">
+            <img src="images/sat.png" alt="Saturday" class="day-img">
+            <img src="images/sun.png" alt="Sunday" class="day-img">
+         </div>
+
+         <div class="time-column">
+            <div class="time-cell">00</div>
+            <div class="time-cell">01</div>
+            <div class="time-cell">02</div>
+            <div class="time-cell">03</div>
+            <div class="time-cell">04</div>
+            <div class="time-cell">05</div>
+            <div class="time-cell">06</div>
+            <div class="time-cell">07</div>
+            <div class="time-cell">08</div>
+            <div class="time-cell">09</div>
+            <div class="time-cell">10</div>
+            <div class="time-cell">11</div>
+            <div class="time-cell">12</div>
+            <div class="time-cell">13</div>
+            <div class="time-cell">14</div>
+            <div class="time-cell">15</div>
+            <div class="time-cell">16</div>
+            <div class="time-cell">17</div>
+            <div class="time-cell">18</div>
+            <div class="time-cell">19</div>
+            <div class="time-cell">20</div>
+            <div class="time-cell">21</div>
+            <div class="time-cell">22</div>
+            <div class="time-cell">23</div>
+         </div>
+
+         <div class="grid-area" id="grid-area">
+
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+         </div>
+      </div>
+
+      <img src = "images/right-arrow.png" class = "right-arrow" onclick="nextWeek()">
+   </div>
+
+   <div class = "personal-right">
+
+      <div class = "personal-move-area">
+         <a href = "personal.html" class = "move-personal-btn">
+            <img src = "images/move-personal-btn.png">
+         </a>
+         <a href = "groupmain.html" class = "move-groupmain-btn">
+            <img src = "images/move-team-btn.png">
+         </a>
+      </div>
+
+      <div class = "personal-textarea">
+
+         <div class = "date-area">
+            <label for = "date" class = "date-label">date</label>
+            <input type = "date" id = "date" class = "date-input">
+         </div>
+         
+         <div class="time-area">
+            <label class="time-text">time</label>
+            <div class="time-box">
+               <input type="time" id="start_time" class="time-input" step="1800">
+               <span class="time-wave">~</span>
+               <input type="time" id="end_time" class="time-input" step="1800">
+            </div>
+         </div>
+
+         <div class = "title-area">
+            <label for = "title" class = "input-text">title</label>
+            <input type = "text" id = "title" class = "input-box">
+         </div>
+
+         <div class = "location-area">
+            <label for = "location" class = "input-text">place</label>
+            <input type = "text" id = "location" class = "input-box">
+         </div>
+
+         <div class = "color-area">
+            <div class = "color-text">color</div>
+
+            <div class = "color-box">
+               <div class="color-circle" data-color="#F4A7A1"></div>
+               <div class="color-circle" data-color="#A8E6CF"></div>
+               <div class="color-circle" data-color="#C7B6E6"></div>
+               <div class="color-circle" data-color="#F7C6D9"></div>
+               <div class="color-circle" data-color="#F6E58D"></div>
+            </div>
+         </div>
+      </div>
+
+      <div class = "personal-save-area">
+         <button type="button" id="save-btn" class="save-btn">
+            save
+         </button>
+
+         <button type="button" id="traveltime-btn" class="traveltime-btn" disabled>
+            travel time
+         </button>
+      </div>
+
+      <div id="context-menu" class="context-menu hidden">
+         <button id="context-delete-btn" type="button">삭제</button>
+      </div>
+   </div>
+
+   <script src = "js/api.js"></script>
+   <script src = "js/personal.js"></script>
+
+</body>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang = "ko">
+
+<head>
+   <meta charset = "utf-8">
+   <title>girl's secret</title>
+   <link rel = "stylesheet" href = "css/common.css">
+   <link rel = "stylesheet" href = "css/traveltime.css">
+</head>
+
+<body class = "page page-traveltime">
+   <div class = "start-area">
+      <div class = "start-text">my location</div>
+      <input type = "text" id = "start-point" class = "start-input">
+      <img src = "images/search.png" class = "search-btn" onclick="search()">
+   </div>
+
+   <div class = "time-area">
+      <div class = time-report-box>
+         <div>It will take about</div>
+         <div class="time-number">
+            <span id="travel-time">35</span>
+            <span>minutes...</span>
+         </div>
+      </div>
+   </div>
+
+   <div class = "add-area">
+      <button type = "button" id = "add-traveltime-btn">add it to my calendar</button>
+      <a href = "personal.html" class="back-btn">back</a>
+   </div>
+
+   <script src = "js/api.js"></script>
+   <script src = "js/traveltime.js"></script>
+
+</body>

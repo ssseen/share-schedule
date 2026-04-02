@@ -1,0 +1,125 @@
+.page-login {
+   background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)), url("/images/login-background.jpg");
+   background-size: cover;
+   background-repeat: no-repeat;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: #FFF6FB;
+   background-position: center;
+}
+.login-title-area {
+   width: 699px;
+   height: 1024px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.login-title {
+   width: 629px;
+   height: 314px;
+}
+.login-login-area {
+   width: 741px;
+   height: 1024px;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   gap: 35px;
+   padding-top: 200px;
+}
+.input-area {
+   width: 741px;
+   height: 300px;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+}
+.login-message {
+   width: 741px;
+   height: 66px;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   font-size: 24px;
+   color:#444444;
+}
+.id-area,
+.pw-area {
+   width: max-content;
+   height: 150px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 30px;
+}
+.id-image,
+.pw-image {
+   width: 163px;
+   height: 90px;
+}
+.login-id,
+.login-pw {
+   width: 410px;
+   height: 90px;
+   resize: none;
+   background-color: rgba(255, 255, 255, 0.6);
+   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+   border: none;
+   outline: none;
+   font-size: 38px;
+   letter-spacing: 2px;
+   color: #444444;
+   padding-left: 15px;
+   border-radius: 10px;
+}
+.check-area {
+   width: max-content;
+   height: 150px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 81px;
+}
+.login-login-box,
+.login-signup-box {
+   width: 200px;
+   height: 100px;
+   background-color: rgba(255, 255, 255, 0.5);
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+   border-radius: 8px;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   font-size: 40px;
+   color: #FFE8E8;
+   text-decoration: none;
+   border: none;
+   cursor: pointer;
+
+   text-shadow:
+      -1.5px -1.5px 0 #503B3B,
+       1.5px -1.5px 0 #503B3B,
+      -1.5px  1.5px 0 #503B3B,
+       1.5px  1.5px 0 #503B3B;
+
+   transition: all 0.15s ease;
+}
+.login-login-box:hover,
+.login-signup-box:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.login-login-box:active,
+.login-signup-box:active {
+   transform: translateY(2px);
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}

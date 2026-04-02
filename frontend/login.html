@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang = "ko">
+
+<head>
+   <meta charset = "utf-8">
+   <title>girl's secret</title>
+   <link rel = "stylesheet" href = "css/common.css">
+   <link rel = "stylesheet" href = "css/login.css">
+</head>
+
+<body class = "page page-login">
+
+   <div class = "login-title-area">
+      <img src = "images/login-title.png" class = "login-title">
+   </div>
+
+   <form class = "login-login-area">
+      <div class = "id-area">
+         <img src = "images/login-ID.png" class = "id-image">
+         <input type = "text" id = "login-id" class = "login-id">
+      </div>
+
+      <div class = "pw-area">
+         <img src = "images/login-PW.png" class = "pw-image">
+         <input type = "password" id = "login-pw" class = "login-pw">
+      </div>
+
+      <p id="login-message" class="login-message"></p>
+
+      <div class = "check-area">
+         <button type = "submit" id = "login-login-box" class = "login-login-box">log in</button>
+         <button type = "button" id = "login-signup-box" class = "login-signup-box">sign up</button>
+      </div>
+   </form>
+
+   <script src = "js/api.js"></script>
+   <script src = "js/auth.js"></script>
+</body>
+</html>
